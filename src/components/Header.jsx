@@ -28,8 +28,11 @@ class Header extends Component {
     if (isLoading) return <Loading />;
     return (
       <header data-testid="header-component">
-        Trybe Tubos
-        <p data-testid="header-user-name">{ name.name }</p>
+        <p data-testid="header-user-name">
+          Olá,
+          {' '}
+          { name.name }
+        </p>
         <Link to="/search" data-testid="link-to-search">Pesquisa</Link>
         <Link to="/favorites" data-testid="link-to-favorites">Favoritas</Link>
         <Link to="/profile" data-testid="link-to-profile">Perfil</Link>
