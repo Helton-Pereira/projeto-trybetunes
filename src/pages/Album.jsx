@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -14,10 +15,12 @@ class Album extends Component {
       artistAlbum: '',
       albumTracks: [],
       isLoading: false,
+      favoriteList: [],
     };
   }
 
   async componentDidMount() {
+    this.setState({ isLoading: true });
     const { match: { params: { id } } } = this.props;
     const data = await getMusics(id);
     this.setState({
@@ -25,16 +28,23 @@ class Album extends Component {
       artistAlbum: data[0].collectionName,
       albumTracks: data.filter((track) => track.trackName),
     });
+    const response = await getFavoriteSongs();
+    this.setState({
+      isLoading: false,
+      favoriteList: response });
   }
 
   handleCheckBox = async (trackObject) => {
     this.setState({ isLoading: true });
     await addSong(trackObject);
-    this.setState({ isLoading: false });
+    this.setState({
+      favoriteList: [...favoriteList, { trackObject }],
+      isLoading: false });
   }
 
   render() {
-    const { artistName, artistAlbum, albumTracks, isLoading } = this.state;
+    const { artistName, artistAlbum, albumTracks,
+      isLoading, favoriteList } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -52,12 +62,21 @@ class Album extends Component {
           trackName={ e.trackName }
           previewUrl={ e.previewUrl }
           trackId={ e.trackId }
-          favoriteSongs={ () => this.handleCheckBox(e) }
+          addFavoriteSongs={ () => this.handleCheckBox(e) }
+          checkedBox={ favoriteList.some((element) => element.trackId === e.trackId) }
         />
         ))}
       </div>
     );
   }
 }
+
+Album.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
 
 export default Album;
