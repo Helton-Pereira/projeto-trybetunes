@@ -29,15 +29,6 @@ class Search extends Component {
     const { artist } = this.state;
     this.setState({ isLoading: true });
     const artistCollection = await searchAlbumsAPI(artist);
-    // if (artistCollection.length === 0) {
-    //   <p>Nenhum álbum foi encontrado</p>;
-    // } else {
-    //   <p>
-    //     Resultado de álbuns de:
-    //     {' '}
-    //     { artist }
-    //   </p>;
-    // }
     this.setState({ isLoading: false });
     this.setState({ albumName: artistCollection });
   }
@@ -90,7 +81,6 @@ class Search extends Component {
 
               </div>)
               : <p>Nenhum álbum foi encontrado</p> }
-
           </ul>
         </div>
       </div>
