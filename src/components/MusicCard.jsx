@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class MusicCard extends Component {
   render() {
-    const { trackName, previewUrl } = this.props;
+    const { trackName, previewUrl, trackId, favoriteSongs } = this.props;
     return (
       <div>
         <p>{ trackName }</p>
@@ -13,6 +13,17 @@ class MusicCard extends Component {
           {' '}
           <code>audio</code>
         </audio>
+        <label
+          htmlFor={ `checkbox-music-${trackId}` }
+          data-testid={ `checkbox-music-${trackId}` }
+        >
+          Favorita
+          <input
+            type="checkbox"
+            id={ `checkbox-music-${trackId}` }
+            onChange={ favoriteSongs }
+          />
+        </label>
       </div>
     );
   }
