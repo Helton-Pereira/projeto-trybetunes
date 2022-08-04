@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -34,12 +34,14 @@ class Album extends Component {
       favoriteList: response });
   }
 
-  handleCheckBox = async (trackObject) => {
+  handleCheckBox = async ({ target }, trackObject) => {
     this.setState({ isLoading: true });
+    if (target.checked) await removeSong(trackObject);
     await addSong(trackObject);
+    const response = await getFavoriteSongs();
     this.setState({
-      favoriteList: [...favoriteList, { trackObject }],
-      isLoading: false });
+      isLoading: false,
+      favoriteList: response });
   }
 
   render() {
@@ -62,7 +64,7 @@ class Album extends Component {
           trackName={ e.trackName }
           previewUrl={ e.previewUrl }
           trackId={ e.trackId }
-          addFavoriteSongs={ () => this.handleCheckBox(e) }
+          addFavoriteSongs={ (event) => this.handleCheckBox(event, e) }
           checkedBox={ favoriteList.some((element) => element.trackId === e.trackId) }
         />
         ))}
