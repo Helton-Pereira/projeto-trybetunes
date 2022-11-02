@@ -36,7 +36,7 @@ class Album extends Component {
 
   handleCheckBox = async ({ target }, trackObject) => {
     this.setState({ isLoading: true });
-    if (target.checked) await removeSong(trackObject);
+    if (!target.checked) await removeSong(trackObject);
     await addSong(trackObject);
     const response = await getFavoriteSongs();
     this.setState({
